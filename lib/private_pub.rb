@@ -36,12 +36,12 @@ module PrivatePub
 
       form = Net::HTTP::Post.new(url.path.empty? ? '/' : url.path)
       form.set_form_data(:message => message.to_json)
-
       http = Net::HTTP.new(url.host, url.port)
       if url.scheme == "https"
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE if config[:ssl_verify_mode] == true
       end
+      http.start {|h| h.request(form)}
     end
 
     # Returns a message hash for sending to Faye
